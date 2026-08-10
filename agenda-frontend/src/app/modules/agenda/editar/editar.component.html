@@ -1,0 +1,79 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      
+      <div *ngIf="cargando" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 rounded-4" *ngIf="!cargando">
+        <div class="card-header bg-white py-3 border-0">
+          <h3 class="mb-0 fw-bold text-primary"><i class="bi bi-pencil-square me-2"></i>Editar Contacto</h3>
+        </div>
+        <div class="card-body p-4">
+          <div *ngIf="mensaje" class="alert alert-success fw-bold">{{ mensaje }}</div>
+          <div *ngIf="error" class="alert alert-danger fw-bold">{{ error }}</div>
+
+          <form [formGroup]="editarForm" (ngSubmit)="onSubmit()">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-muted">Nombres</label>
+                <input type="text" class="form-control form-control-lg bg-light" formControlName="nombres" placeholder="Ej. Juan">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-muted">Apellidos</label>
+                <input type="text" class="form-control form-control-lg bg-light" formControlName="apellidos" placeholder="Ej. Pérez">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-muted">Teléfono</label>
+                <input type="text" class="form-control form-control-lg bg-light" formControlName="telefono" placeholder="10 dígitos numéricos">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-muted">Tipo de Contacto</label>
+                <select class="form-select form-select-lg bg-light" formControlName="tipo">
+                  <option value="Trabajo">Trabajo</option>
+                  <option value="Personal">Personal</option>
+                  <option value="Proveedores">Proveedores</option>
+                  <option value="Otros">Otros</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold text-muted">Dirección</label>
+              <input type="text" class="form-control form-control-lg bg-light" formControlName="direccion" placeholder="Calle principal y secundaria">
+            </div>
+            
+            <hr class="my-4">
+            <h5 class="text-muted fw-bold mb-3">Información Opcional</h5>
+            
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label class="form-label fw-bold text-muted">Sitio Web</label>
+                <input type="url" class="form-control bg-light" formControlName="sitio_web" placeholder="https://ejemplo.com">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold text-muted">Empresa</label>
+                <input type="text" class="form-control bg-light" formControlName="empresa" placeholder="Empresa S.A.">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold text-muted">Cargo</label>
+                <input type="text" class="form-control bg-light" formControlName="cargo" placeholder="Gerente">
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <a routerLink="/agenda" class="btn btn-light btn-lg rounded-pill px-4 fw-bold shadow-sm">Cancelar</a>
+              <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow-sm" [disabled]="editarForm.invalid">Actualizar Contacto</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

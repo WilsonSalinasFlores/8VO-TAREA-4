@@ -1,0 +1,63 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-gradient bg-primary text-white text-center py-4 rounded-top-4">
+          <h3 class="mb-0 fw-bold">Registro de Usuario</h3>
+        </div>
+        <div class="card-body p-5">
+          <div *ngIf="mensaje" class="alert alert-success fw-bold">{{ mensaje }}</div>
+          <div *ngIf="error" class="alert alert-danger fw-bold">{{ error }}</div>
+
+          <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label class="form-label text-muted fw-bold">Cédula</label>
+                <input type="text" class="form-control form-control-lg bg-light" formControlName="cedula" placeholder="10 dígitos">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label text-muted fw-bold">Nombre Completo</label>
+                <input type="text" class="form-control form-control-lg bg-light" formControlName="nombre" placeholder="Juan Pérez">
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label class="form-label text-muted fw-bold">Correo Electrónico</label>
+                <input type="email" class="form-control form-control-lg bg-light" formControlName="correo" placeholder="correo@ejemplo.com">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label text-muted fw-bold">Contraseña</label>
+                <input type="password" class="form-control form-control-lg bg-light" formControlName="password" placeholder="Mínimo 6 caracteres">
+              </div>
+            </div>
+
+            <hr class="my-4">
+            <h5 class="mb-4 text-primary fw-bold">Preguntas de Seguridad (Obligatorias)</h5>
+            <div formArrayName="respuestas">
+              <div *ngFor="let item of respuestasFormArray.controls; let i=index" [formGroupName]="i" class="row mb-3">
+                <div class="col-md-6">
+                  <select class="form-select form-select-lg bg-light" formControlName="id_pregunta">
+                    <option value="" disabled>Seleccione una pregunta...</option>
+                    <option *ngFor="let p of preguntas" [value]="p.id">{{ p.pregunta }}</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control form-control-lg bg-light" formControlName="respuesta" placeholder="Su respuesta">
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-5">
+              <button type="submit" class="btn btn-primary btn-lg fw-bold rounded-pill shadow-sm" [disabled]="registroForm.invalid">Crear Cuenta</button>
+            </div>
+            
+            <div class="text-center mt-3">
+               <a routerLink="/auth/login" class="text-decoration-none fw-bold">¿Ya tienes cuenta? Inicia sesión</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

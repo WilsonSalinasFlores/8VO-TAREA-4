@@ -1,0 +1,45 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0 rounded-4 border-top border-5 border-info">
+        <div class="card-header bg-white text-center py-4">
+          <h3 class="mb-0 fw-bold text-info"><i class="bi bi-shield-lock-fill me-2"></i>Bienvenido</h3>
+          <p class="text-muted mt-2">Por seguridad, debe configurar su nueva contraseña y establecer preguntas de recuperación antes de continuar.</p>
+        </div>
+        <div class="card-body p-5 pt-3">
+          <div *ngIf="mensaje" class="alert alert-success fw-bold">{{ mensaje }}</div>
+          <div *ngIf="error" class="alert alert-danger fw-bold">{{ error }}</div>
+
+          <form [formGroup]="primerLoginForm" (ngSubmit)="onSubmit()">
+            
+            <div class="mb-4">
+              <label class="form-label text-muted fw-bold">Establecer Nueva Contraseña</label>
+              <input type="password" class="form-control form-control-lg bg-light" formControlName="password" placeholder="Mínimo 6 caracteres">
+            </div>
+
+            <hr class="my-4">
+            <h5 class="mb-4 text-info fw-bold">Preguntas de Seguridad (Obligatorias)</h5>
+            <div formArrayName="respuestas">
+              <div *ngFor="let item of respuestasFormArray.controls; let i=index" [formGroupName]="i" class="row mb-3">
+                <div class="col-md-6">
+                  <select class="form-select form-select-lg bg-light" formControlName="id_pregunta">
+                    <option value="" disabled>Seleccione una pregunta...</option>
+                    <option *ngFor="let p of preguntas" [value]="p.id">{{ p.pregunta }}</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control form-control-lg bg-light" formControlName="respuesta" placeholder="Su respuesta">
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-5">
+              <button type="submit" class="btn btn-info text-white btn-lg fw-bold rounded-pill shadow-sm" [disabled]="primerLoginForm.invalid">Guardar Configuración</button>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

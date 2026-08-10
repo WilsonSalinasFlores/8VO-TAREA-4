@@ -1,0 +1,56 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history me-2 text-success"></i>Bitácora de Auditoría</h2>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold shadow-sm" (click)="cargarBitacora()">
+      <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+    </button>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger fw-bold shadow-sm">{{ error }}</div>
+  
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4 mb-5" *ngIf="!cargando">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover table-borderless align-middle mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th class="py-3 ps-4 text-muted fw-bold">Fecha / Hora</th>
+              <th class="py-3 text-muted fw-bold">Admin Responsable</th>
+              <th class="py-3 text-muted fw-bold">Acción</th>
+              <th class="py-3 text-muted fw-bold">Detalle</th>
+              <th class="py-3 text-muted fw-bold text-center">IP Origen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of registros" class="border-bottom border-light">
+              <td class="py-3 ps-4 text-secondary"><i class="bi bi-calendar-event me-2"></i>{{ r.fecha | date:'medium' }}</td>
+              <td class="py-3 fw-bold">{{ r.admin_nombre }}</td>
+              <td class="py-3">
+                <span class="badge rounded-pill" 
+                  [ngClass]="{
+                    'bg-info': r.accion === 'CONSULTA',
+                    'bg-warning text-dark': r.accion === 'MODIFICACION',
+                    'bg-danger': r.accion === 'ELIMINACION',
+                    'bg-secondary': !['CONSULTA','MODIFICACION','ELIMINACION'].includes(r.accion)
+                  }">
+                  {{ r.accion }}
+                </span>
+              </td>
+              <td class="py-3 text-muted">{{ r.detalle }}</td>
+              <td class="py-3 text-center text-monospace small text-muted">{{ r.ip }}</td>
+            </tr>
+            <tr *ngIf="registros.length === 0">
+              <td colspan="5" class="text-center py-5 text-muted">No hay registros de auditoría aún.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
