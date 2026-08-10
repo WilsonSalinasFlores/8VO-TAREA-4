@@ -13,8 +13,19 @@
           <form [formGroup]="primerLoginForm" (ngSubmit)="onSubmit()">
             
             <div class="mb-4">
-              <label class="form-label text-muted fw-bold">Establecer Nueva Contraseña</label>
-              <input type="password" class="form-control form-control-lg bg-light" formControlName="password" placeholder="Mínimo 6 caracteres">
+              <label class="form-label text-muted fw-bold">Contraseña Actual</label>
+              <input type="password" class="form-control form-control-lg bg-light" formControlName="password_actual">
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label class="form-label text-muted fw-bold">Nueva Contraseña</label>
+                <input type="password" class="form-control form-control-lg bg-light" formControlName="password_nuevo" placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label text-muted fw-bold">Confirmar Contraseña</label>
+                <input type="password" class="form-control form-control-lg bg-light" formControlName="password_confirmacion">
+              </div>
             </div>
 
             <hr class="my-4">

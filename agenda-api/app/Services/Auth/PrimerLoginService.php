@@ -35,7 +35,7 @@ class PrimerLoginService extends BaseService
         $preguntas = array_map(function($p) use ($usuario) {
             return [
                 'usuario_id' => $usuario->id,
-                'catalogo_pregunta_id' => $p['id'],
+                'catalogo_pregunta_id' => $p['id_pregunta'] ?? $p['id'],
                 'respuesta' => strtolower(trim($p['respuesta'])),
             ];
         }, $datos['preguntas']);

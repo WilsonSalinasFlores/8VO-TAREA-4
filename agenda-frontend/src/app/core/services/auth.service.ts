@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { BaseService } from './base.service';
 import { HttpClient } from '@angular/common/http';
 import { ILoginResponse, IUsuario } from '../interfaces/usuario.interface';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, switchMap as import_rxjs_switchMap } from 'rxjs/operators';
 import { IRespuestaApi } from '../interfaces/respuesta-api.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -34,7 +34,15 @@ export class AuthService extends BaseService {
   }
 
   primerLogin(data: any) {
-    return this.http.post<IRespuestaApi<any>>(`${this.baseUrl}/auth/primer-login`, data).pipe(
+    const pregData = { preguntas: data.respuestas };
+    const passData = { 
+        password_actual: data.password_actual, 
+        password_nuevo: data.password_nuevo, 
+        password_confirmacion: data.password_confirmacion 
+    };
+
+    return this.http.post<IRespuestaApi<any>>(`${this.baseUrl}/auth/primer-login/preguntas`, pregData).pipe(
+      import_rxjs_switchMap(() => this.http.post<IRespuestaApi<any>>(`${this.baseUrl}/auth/primer-login`, passData)),
       tap(res => {
         if (res.exito) {
           const user = this.getCurrentUser();
@@ -59,6 +67,6 @@ export class AuthService extends BaseService {
     const u = localStorage.getItem('agenda_user');
     return u ? JSON.parse(u) : null;
   }
-  isSuperusuario() { return this.getCurrentUser()?.rol === 'admin'; }
+  isSuperusuario() { return this.getCurrentUser()?.rol === 'superusuario'; }
   isPrimerLogin() { return this.getCurrentUser()?.primer_login === true; }
 }

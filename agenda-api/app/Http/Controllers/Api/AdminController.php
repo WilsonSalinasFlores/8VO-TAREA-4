@@ -19,13 +19,13 @@ class AdminController extends Controller
     public function listarUsuarios()
     {
         $usuarios = $this->adminService->listarUsuarios();
-        return UsuarioResource::collection($usuarios);
+        return UsuarioResource::collection($usuarios)->additional(['exito' => true]);
     }
 
     public function verAgenda($id)
     {
         $contactos = $this->adminService->verAgenda($id);
-        return ContactoResource::collection($contactos);
+        return ContactoResource::collection($contactos)->additional(['exito' => true]);
     }
 
     public function cambiarEstado($id)
@@ -37,6 +37,6 @@ class AdminController extends Controller
     public function bitacora()
     {
         $bitacora = $this->adminService->listarBitacora();
-        return BitacoraResource::collection($bitacora);
+        return BitacoraResource::collection($bitacora)->additional(['exito' => true]);
     }
 }

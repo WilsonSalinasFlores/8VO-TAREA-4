@@ -3,11 +3,12 @@ import { ContactoService } from '../../../core/services/contacto.service';
 import { IContacto } from '../../../core/interfaces/contacto.interface';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lista',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './lista.component.html',
   styleUrls: []
 })
@@ -15,9 +16,11 @@ export class ListaComponent implements OnInit {
   private contactoService = inject(ContactoService);
   private router = inject(Router);
 
+  contactosOriginales: IContacto[] = [];
   contactos: IContacto[] = [];
   cargando: boolean = true;
   error: string = '';
+  filtroTexto: string = '';
 
   ngOnInit() {
     this.cargarContactos();
@@ -28,7 +31,8 @@ export class ListaComponent implements OnInit {
     this.contactoService.obtenerTodos().subscribe({
       next: (res) => {
         if (res.exito) {
-          this.contactos = res.data;
+          this.contactosOriginales = res.data;
+          this.filtrar(); // Call this to initialize `this.contactos`
         } else {
           this.error = 'No se pudieron cargar los contactos.';
         }
@@ -38,6 +42,22 @@ export class ListaComponent implements OnInit {
         this.error = 'Error de servidor.';
         this.cargando = false;
       }
+    });
+  }
+
+  filtrar() {
+    const texto = this.filtroTexto.toLowerCase().trim();
+    if (!texto) {
+      this.contactos = [...this.contactosOriginales];
+      return;
+    }
+    
+    this.contactos = this.contactosOriginales.filter(c => {
+      const valores = [
+        c.nombres, c.apellidos, c.telefono, c.empresa, 
+        c.direccion, c.cargo, c.sitio_web, c.tipo
+      ];
+      return valores.some(val => val && val.toString().toLowerCase().includes(texto));
     });
   }
 

@@ -33,9 +33,17 @@ export class PrimerLoginComponent implements OnInit {
 
   initForm() {
     this.primerLoginForm = this.fb.group({
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password_actual: ['', Validators.required],
+      password_nuevo: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d)/)]],
+      password_confirmacion: ['', Validators.required],
       respuestas: this.fb.array([])
-    });
+    }, { validators: this.passwordsMatch });
+  }
+
+  passwordsMatch(form: any) {
+    const p1 = form.get('password_nuevo')?.value;
+    const p2 = form.get('password_confirmacion')?.value;
+    return p1 === p2 ? null : { mismatch: true };
   }
 
   get respuestasFormArray() {
@@ -73,7 +81,9 @@ export class PrimerLoginComponent implements OnInit {
       this.error = '';
       
       const payload = {
-        password: this.primerLoginForm.value.password,
+        password_actual: this.primerLoginForm.value.password_actual,
+        password_nuevo: this.primerLoginForm.value.password_nuevo,
+        password_confirmacion: this.primerLoginForm.value.password_confirmacion,
         respuestas: this.primerLoginForm.value.respuestas
       };
       
@@ -83,7 +93,7 @@ export class PrimerLoginComponent implements OnInit {
             this.mensaje = 'Configuración completada exitosamente.';
             setTimeout(() => {
               if (this.authService.isSuperusuario()) {
-                this.router.navigate(['/admin/dashboard']);
+                this.router.navigate(['/admin/usuarios']);
               } else {
                 this.router.navigate(['/agenda']);
               }

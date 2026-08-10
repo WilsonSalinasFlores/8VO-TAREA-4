@@ -29,15 +29,15 @@
             <tr *ngFor="let u of usuarios" class="border-bottom border-light">
               <td class="py-3 ps-4 fw-bold text-secondary">#{{ u.id }}</td>
               <td class="py-3">{{ u.cedula }}</td>
-              <td class="py-3 fw-bold">{{ u.nombre }} <span class="badge bg-warning text-dark ms-1" *ngIf="u.rol === 'admin'">ADMIN</span></td>
+              <td class="py-3 fw-bold">{{ u.nombre }} <span class="badge bg-warning text-dark ms-1" *ngIf="u.rol === 'superusuario'">ADMIN</span></td>
               <td class="py-3">{{ u.correo }}</td>
               <td class="py-3 text-center">
                 <div class="form-check form-switch d-flex justify-content-center">
-                  <input class="form-check-input fs-5 cursor-pointer shadow-sm" type="checkbox" [checked]="u.is_active" (change)="cambiarEstado(u)" [disabled]="u.rol === 'admin'" title="Habilitar / Inhabilitar">
+                  <input class="form-check-input fs-5 cursor-pointer shadow-sm" type="checkbox" [checked]="u.is_active" (change)="cambiarEstado(u)" [disabled]="u.rol === 'superusuario'" title="Habilitar / Inhabilitar">
                 </div>
               </td>
               <td class="py-3 text-center">
-                <button class="btn btn-outline-info btn-sm rounded-pill fw-bold" (click)="verAgenda(u)" [disabled]="u.rol === 'admin'">
+                <button class="btn btn-outline-info btn-sm rounded-pill fw-bold" (click)="verAgenda(u)" [disabled]="u.rol === 'superusuario'">
                   <i class="bi bi-search me-1"></i>Auditar Agenda
                 </button>
               </td>
@@ -64,10 +64,15 @@
 
       <div *ngIf="agendaUsuarioSeleccionado.length > 0" class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" *ngFor="let c of agendaUsuarioSeleccionado">
-          <div class="card h-100 border-0 shadow-sm rounded-3">
+          <div class="card h-100 border-0 shadow-sm rounded-3" [ngClass]="{'bg-light opacity-75': c.estado === 'Eliminado'}">
             <div class="card-body">
-              <h6 class="card-title fw-bold mb-1">{{ c.nombres }} {{ c.apellidos }} <span class="badge bg-success float-end" *ngIf="c.tipo === 'FAVORITO'">★</span></h6>
-              <p class="card-text text-muted small mb-0"><i class="bi bi-telephone me-1"></i>{{ c.telefono }}</p>
+              <h6 class="card-title fw-bold mb-1">
+                {{ c.nombres }} {{ c.apellidos }} 
+                <span class="badge float-end" [ngClass]="c.estado === 'Eliminado' ? 'bg-danger' : 'bg-success'">
+                  {{ c.estado | uppercase }}
+                </span>
+              </h6>
+              <p class="card-text text-muted small mb-0 mt-2"><i class="bi bi-telephone me-1"></i>{{ c.telefono }}</p>
               <p class="card-text text-muted small mb-0" *ngIf="c.correo"><i class="bi bi-envelope me-1"></i>{{ c.correo }}</p>
               <p class="card-text text-muted small mb-0" *ngIf="c.empresa"><i class="bi bi-building me-1"></i>{{ c.empresa }}</p>
             </div>

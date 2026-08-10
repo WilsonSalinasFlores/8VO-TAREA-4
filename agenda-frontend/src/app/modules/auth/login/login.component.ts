@@ -15,6 +15,7 @@ import { NgIf } from '@angular/common';
         <div class="card premium-card">
           <div class="card-body p-4">
             <h3 class="text-center mb-4">Iniciar Sesión</h3>
+            <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="needs-validation" [class.was-validated]="submitted">
               <div class="mb-3">
                 <label class="form-label">Cédula / Usuario</label>
@@ -47,6 +48,7 @@ export class LoginComponent {
   
   loading = false;
   submitted = false;
+  errorMessage = '';
 
   loginForm = this.fb.group({
     cedula: ['', Validators.required],
@@ -61,12 +63,15 @@ export class LoginComponent {
     this.auth.login(this.loginForm.value).subscribe({
       next: () => {
         if (this.auth.isSuperusuario()) {
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/admin/usuarios']);
         } else {
           this.router.navigate(['/agenda']);
         }
       },
-      error: () => { this.loading = false; },
+      error: (err) => { 
+        this.loading = false; 
+        this.errorMessage = err.error?.mensaje || 'Credenciales incorrectas.';
+      },
       complete: () => { this.loading = false; }
     });
   }
