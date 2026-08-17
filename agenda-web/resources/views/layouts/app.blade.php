@@ -69,5 +69,18 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @if(session('error') || $errors->any())
+    <script>
+        @if(session('error'))
+        console.error('[Agenda] Error de sesión:', @json(session('error')));
+        @endif
+        @if($errors->any())
+        console.error('[Agenda] Errores de validación:', @json($errors->toArray()));
+        @endif
+        @if(session('api_debug'))
+        console.warn('[Agenda] Respuesta API:', @json(session('api_debug')));
+        @endif
+    </script>
+    @endif
 </body>
 </html>

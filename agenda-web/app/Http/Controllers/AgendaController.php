@@ -50,7 +50,10 @@ class AgendaController extends Controller
             return redirect('/agenda')->with('success', 'Contacto creado exitosamente.');
         }
         $errores = $res->json('errores') ?? [];
-        return back()->withInput()->with('error', $res->json('mensaje') ?? 'Error al crear contacto.')->with('errores', $errores);
+        return back()->withInput()
+            ->with('error', $res->json('mensaje') ?? 'Error al crear contacto.')
+            ->with('errores', $errores)
+            ->with('api_debug', ['status' => $res->status(), 'body' => $res->json()]);
     }
 
     public function edit($id)
