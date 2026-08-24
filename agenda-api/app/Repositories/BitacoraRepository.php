@@ -22,8 +22,24 @@ class BitacoraRepository extends BaseRepository implements BitacoraRepositoryInt
         return $this->guardar($datos);
     }
 
-    public function listar()
+    public function listar(array $filtros = [], int $perPage = 10)
     {
-        return $this->model->with(['superusuario', 'targetUsuario'])->orderBy('created_at', 'desc')->get();
+        $query = $this->model
+            ->with(['superusuario', 'targetUsuario'])
+            ->orderBy('created_at', 'desc');
+
+        if (!empty($filtros['accion'])) {
+            $query->where('accion', $filtros['accion']);
+        }
+
+        if (!empty($filtros['usuario'])) {
+            $busqueda = $filtros['usuario'];
+            $query->whereHas('superusuario', function ($q) use ($busqueda) {
+                $q->where('nombre', 'like', "%{$busqueda}%")
+                  ->orWhere('cedula', 'like', "%{$busqueda}%");
+            });
+        }
+
+        return $query->paginate($perPage);
     }
 }

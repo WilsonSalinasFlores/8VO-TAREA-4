@@ -30,5 +30,6 @@ Route::middleware(['auth:sanctum', 'usuario.activo'])->group(function () {
         Route::get('/admin/usuarios/{id}/agenda', [AdminController::class, 'verAgenda']);
         Route::patch('/admin/usuarios/{id}/estado', [AdminController::class, 'cambiarEstado']);
         Route::get('/admin/bitacora', [AdminController::class, 'bitacora']);
+        Route::get('/admin/sesiones', [AdminController::class, 'sesiones']);
     });
 });

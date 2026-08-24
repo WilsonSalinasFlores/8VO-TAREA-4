@@ -52,8 +52,8 @@ class AdminService extends BaseService
         return $nuevoEstado;
     }
 
-    public function listarBitacora()
+    public function listarBitacora(array $filtros = [], int $perPage = 10)
     {
-        return $this->bitacoraRepo->listar();
+        return $this->bitacoraRepo->listar($filtros, $perPage);
     }
 }

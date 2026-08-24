@@ -7,20 +7,26 @@ class BitacoraResource extends JsonResource
 {
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'accion' => $this->accion,
-            'descripcion' => $this->descripcion,
-            'target_usuario' => $this->target_usuario_id,
-            'superusuario' => $this->superusuario_id,
-            'fecha' => $this->created_at ? \Carbon\Carbon::parse($this->created_at)->format('Y-m-d H:i:s') : null,
-        ];
-    }
+        $super  = $this->superusuario;
+        $target = $this->targetUsuario ?? null;
 
-    public function with($request)
-    {
         return [
-            'exito' => true,
+            'id'          => $this->id,
+            'accion'      => $this->accion,
+            'descripcion' => $this->descripcion,
+            'superusuario' => $super ? [
+                'id'     => $super->id,
+                'nombre' => $super->nombre,
+                'cedula' => $super->cedula,
+            ] : null,
+            'target_usuario' => $target ? [
+                'id'     => $target->id,
+                'nombre' => $target->nombre,
+                'cedula' => $target->cedula,
+            ] : null,
+            'fecha' => $this->created_at
+                ? \Carbon\Carbon::parse($this->created_at)->format('Y-m-d H:i:s')
+                : null,
         ];
     }
 }

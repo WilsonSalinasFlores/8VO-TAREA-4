@@ -17,8 +17,12 @@ class ApiService {
     public function authPost(string $path, array $data): \Illuminate\Http\Client\Response {
         return $this->http()->post($this->base.$path, $data);
     }
-    public function authGet(string $path): \Illuminate\Http\Client\Response {
-        return $this->http()->get($this->base.$path);
+    public function authGet(string $path, array $query = []): \Illuminate\Http\Client\Response {
+        $url = $this->base . $path;
+        if (!empty($query)) {
+            $url .= '?' . http_build_query($query);
+        }
+        return $this->http()->get($url);
     }
     public function authPatch(string $path, array $data = []): \Illuminate\Http\Client\Response {
         return $this->http()->patch($this->base.$path, $data);
