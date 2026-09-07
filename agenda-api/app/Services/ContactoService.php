@@ -26,6 +26,9 @@ class ContactoService extends BaseService
     public function crear(int $usuarioId, array $datos)
     {
         $datos['usuario_id'] = $usuarioId;
+        if (!empty($datos['telefonos']) && is_array($datos['telefonos'])) {
+            $datos['telefono'] = $datos['telefonos'][0]['numero'] ?? ($datos['telefono'] ?? '');
+        }
         $contacto = $this->contactoRepo->guardar($datos);
 
         $this->bitacoraRepo->registrar([
@@ -45,6 +48,10 @@ class ContactoService extends BaseService
 
         if (!$contacto || $contacto->usuario_id !== $usuarioId || $contacto->eliminado) {
             throw ValidationException::withMessages(['mensaje' => 'Contacto no encontrado o sin permisos.']);
+        }
+
+        if (!empty($datos['telefonos']) && is_array($datos['telefonos'])) {
+            $datos['telefono'] = $datos['telefonos'][0]['numero'] ?? ($datos['telefono'] ?? '');
         }
 
         $resultado = $this->contactoRepo->actualizar($id, $datos);

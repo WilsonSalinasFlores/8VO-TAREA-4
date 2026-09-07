@@ -6,6 +6,7 @@ use App\Services\AdminService;
 use App\Http\Resources\UsuarioResource;
 use App\Http\Resources\ContactoResource;
 use App\Http\Resources\BitacoraResource;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -34,7 +35,7 @@ class AdminController extends Controller
         return response()->json(['exito' => true, 'mensaje' => 'Estado cambiado a ' . ($estado ? 'Activo' : 'Inactivo')]);
     }
 
-    public function bitacora(\Illuminate\Http\Request $request)
+    public function bitacora(Request $request)
     {
         $filtros = array_filter([
             'accion'  => $request->query('accion'),
@@ -50,11 +51,7 @@ class AdminController extends Controller
 
     public function sesiones()
     {
-        // Obtener todos los tokens agrupados por usuario (opcional, o simplemente la lista de tokens)
-        $tokens = \Laravel\Sanctum\PersonalAccessToken::with('tokenable')
-            ->orderBy('last_used_at', 'desc')
-            ->get();
-            
+        $tokens = $this->adminService->listarSesiones();
         return response()->json(['exito' => true, 'data' => $tokens]);
     }
 }

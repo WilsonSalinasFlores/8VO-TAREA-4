@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\ApiService;
+use App\Models\Contacto;
 
 class AgendaController extends Controller
 {
@@ -17,13 +18,25 @@ class AgendaController extends Controller
     public function index(Request $request)
     {
         $res = $this->api->authGet('/contactos');
-        $contactos = $res->successful() ? ($res->json('data') ?? []) : [];
+        $raw = $res->successful() ? ($res->json('data') ?? []) : [];
+        $contactos = Contacto::collection($raw);
 
         $q = $request->query('q');
         if ($q) {
             $q_lower = strtolower($q);
-            $contactos = array_filter($contactos, function($c) use ($q_lower) {
-                $fields = [$c['nombres'], $c['apellidos'], $c['telefono'], $c['empresa'] ?? '', $c['direccion'] ?? '', $c['tipo'] ?? ''];
+            $contactos = array_filter($contactos, function(Contacto $c) use ($q_lower) {
+                $fields = [
+                    $c->nombres, 
+                    $c->apellidos, 
+                    $c->telefono ?? '', 
+                    $c->empresa ?? '', 
+                    $c->direccion ?? '', 
+                    $c->tipo ?? ''
+                ];
+                foreach ($c->telefonos as $t) {
+                    $fields[] = $t['numero'] ?? '';
+                    $fields[] = $t['tipo'] ?? '';
+                }
                 return collect($fields)->contains(fn($f) => str_contains(strtolower((string)$f), $q_lower));
             });
         }
@@ -41,8 +54,10 @@ class AgendaController extends Controller
         $request->validate([
             'nombres' => 'required',
             'apellidos' => 'required',
-            'telefono' => 'required',
             'tipo' => 'required',
+            'telefonos' => 'required|array|min:1',
+            'telefonos.*.numero' => 'required',
+            'telefonos.*.tipo' => 'required',
         ]);
 
         $res = $this->api->authPost('/contactos', $request->except('_token'));
@@ -60,7 +75,8 @@ class AgendaController extends Controller
     {
         $res = $this->api->authGet("/contactos/$id");
         if ($res->successful()) {
-            $contacto = $res->json('data') ?? $res->json();
+            $raw = $res->json('data') ?? $res->json();
+            $contacto = Contacto::fromArray($raw);
             return view('agenda.editar', compact('contacto'));
         }
         return redirect('/agenda')->with('error', 'Contacto no encontrado.');
@@ -71,8 +87,10 @@ class AgendaController extends Controller
         $request->validate([
             'nombres' => 'required',
             'apellidos' => 'required',
-            'telefono' => 'required',
             'tipo' => 'required',
+            'telefonos' => 'required|array|min:1',
+            'telefonos.*.numero' => 'required',
+            'telefonos.*.tipo' => 'required',
         ]);
 
         $res = $this->api->authPut("/contactos/$id", $request->except('_token', '_method'));

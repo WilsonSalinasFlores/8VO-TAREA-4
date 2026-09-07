@@ -5,6 +5,7 @@ use App\Repositories\Contracts\UsuarioRepositoryInterface;
 use App\Repositories\Contracts\ContactoRepositoryInterface;
 use App\Repositories\Contracts\BitacoraRepositoryInterface;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AdminService extends BaseService
 {
@@ -55,5 +56,12 @@ class AdminService extends BaseService
     public function listarBitacora(array $filtros = [], int $perPage = 10)
     {
         return $this->bitacoraRepo->listar($filtros, $perPage);
+    }
+
+    public function listarSesiones()
+    {
+        return PersonalAccessToken::with('tokenable')
+            ->orderBy('last_used_at', 'desc')
+            ->get();
     }
 }

@@ -15,6 +15,9 @@ class ContactoResource extends JsonResource
             'tipo_label' => $this->tipo,
             'direccion' => $this->direccion,
             'telefono' => $this->telefono,
+            'telefonos' => $this->telefonos ?? (
+                $this->telefono ? [['numero' => $this->telefono, 'tipo' => 'Principal']] : []
+            ),
             'sitio_web' => $this->sitio_web,
             'empresa' => $this->empresa,
             'cargo' => $this->cargo,

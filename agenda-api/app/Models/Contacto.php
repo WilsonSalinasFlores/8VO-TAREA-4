@@ -5,9 +5,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contacto extends Model
 {
-    protected $fillable = ['usuario_id', 'nombres', 'apellidos', 'tipo', 'direccion', 'telefono', 'sitio_web', 'empresa', 'cargo', 'eliminado'];
+    protected $fillable = [
+        'usuario_id', 'nombres', 'apellidos', 'tipo', 'direccion', 
+        'telefono', 'telefonos', 'sitio_web', 'empresa', 'cargo', 'eliminado'
+    ];
     
     protected $casts = [
+        'telefonos' => 'array',
         'eliminado' => 'boolean',
     ];
 
